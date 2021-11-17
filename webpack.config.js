@@ -6,7 +6,7 @@ module.exports = {
 	entry:{
 		main: "./src/App.ts",
 	},
-
+	devtool: 'eval',
 	// Outputs compiled bundle to `./web/js/main.js`
 	output:{
 		path: __dirname + "/web/",

@@ -1,9 +1,3 @@
-/*
- * Shape.ts
- * ===========
- * Placeholder shape to demonstrate setup works. 
- * Has capacity to import custom .glsl shader files
- */
 
 import * as THREE from "three";
 
@@ -11,7 +5,7 @@ import vertShader from "./glsl/torus.vs";
 import fragShader from "./glsl/torus.fs";
 import { randInt } from "Utils";
 
-export default class Shape {
+export default class Cube {
 	mesh: THREE.Mesh;
 	timeU: THREE.IUniform;
 
