@@ -1,21 +1,34 @@
-type Item = {
-    maxStack: number
-    currentStack: number
-    id: number
+import Item from "./Item";
+
+interface IInventory {
+    add(item: Item): void | Item
+    remove(index: number): void;
 }
 
-export default class Inventory {
+export default class Inventory implements IInventory {
     private maxSize: number
     private array: Item[]
-    constructor() {
-        this.maxSize = 8
+
+    private el: HTMLElement;
+    private addBtn: HTMLButtonElement;
+    private deleteBtn: HTMLButtonElement;
+
+    constructor(maxSize: number) {
+        this.maxSize = maxSize;
         this.array = [];
+        this.el = document.querySelector('.inventory')
+        this.addBtn = document.querySelector('.inventory-add')
+        this.deleteBtn = document.querySelector('.inventory-delete')
+
+        this.addBtn.addEventListener('click', () => {
+            this.add(new Item())
+        })
     }
     add(item: Item) {
         for (let i = 0; i < this.array.length; i++) {
             const currentItem = this.array[i];
             if (currentItem.id === item.id) {
-                if (currentItem.maxStack === currentItem.currentStack){
+                if (currentItem.maxStack === currentItem.currentStack) {
                     continue;
                 }
                 if (this.array.length <= this.maxSize) {
@@ -28,7 +41,7 @@ export default class Inventory {
                             this.array.push(item)
                         }
                     }
-                    console.log(this.array)
+                    this.el.innerHTML = JSON.stringify(this.array, null, 2);
                     return;
                 }
             }
@@ -36,9 +49,10 @@ export default class Inventory {
         if (this.array.length < this.maxSize) {
             this.array.push(item)
         }
-        console.log(this.array)
+        this.el.innerHTML = JSON.stringify(this.array, null, 2);
     }
-    remove(index : number) {
+    remove(index: number) {
         delete this.array[index]
+        this.el.innerHTML = JSON.stringify(this.array, null, 2);
     }
 }
