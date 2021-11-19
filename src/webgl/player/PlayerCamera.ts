@@ -47,7 +47,7 @@ export default class PlayerCamera extends PerspectiveCamera {
     }
     addHand() {
         const rect = new THREE.BoxGeometry(1, 1, 1)
-        const material = new THREE.MeshBasicMaterial({ color: 'brown' });
+        const material = new THREE.MeshLambertMaterial({ color: 'brown' });
         const mesh = new THREE.Mesh(rect, material);
         this.add(mesh)
 
@@ -83,11 +83,13 @@ export default class PlayerCamera extends PerspectiveCamera {
                     const block = intersects[i].object;
                     if (block.name === "Block" && block.parent) {
                         const blockData = this.world.getBlock(block.position);
-                        const item = blockData.getItem();
-                        this.player.inventory.add(item)
-                        console.log(block.parent);
-                        block.parent.remove(block);
-                        return;
+                        if (blockData.isBreakable) {
+                            const item = blockData.getItem();
+                            this.player.inventory.add(item)
+                            console.log(block.parent);
+                            block.parent.remove(block);
+                            return;
+                        }
                     }
                 }
             }

@@ -10,6 +10,7 @@ export class BlockWater extends Block {
 		this.material.color = new Color('aqua');
 		this.material.transparent = true;
 		this.material.opacity = 0.6;
+		this.isBreakable = false;
 	}
 
 }

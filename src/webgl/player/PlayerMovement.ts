@@ -6,6 +6,7 @@ export default class PlayerMovement {
     public movementSpeed: number = 10;
     private fpsControls: PointerLockControls;
     private keyPresses: { [key: string]: boolean };
+    private sprintIsActive: boolean = false;
 
     constructor(camera: THREE.Camera, domElement: HTMLCanvasElement) {
         this.fpsControls = new PointerLockControls(camera, domElement);
@@ -19,8 +20,25 @@ export default class PlayerMovement {
         const keyPresses = {};
         this.keyPresses = keyPresses;
 
+        let doubleWPress = 0;
+        let timeout: NodeJS.Timeout;
         window.addEventListener('keydown', (event: KeyboardEvent) => {
             keyPresses[event.code] = true;
+
+            if (event.code === 'KeyW') {
+                doubleWPress++
+                if (doubleWPress === 2) {
+                    timeout = setTimeout(() => {
+                        this.sprintIsActive = true;
+                        clearTimeout(timeout);
+                    }, 150)
+                } else if (doubleWPress > 2) {
+                    doubleWPress = 0;
+                    this.sprintIsActive = false;
+                }
+                
+            }
+            console.log(event);
         }, false)
 
         window.addEventListener('keyup', keyUpListener, false);
@@ -28,9 +46,11 @@ export default class PlayerMovement {
             delete keyPresses[event.code]
         }
     }
+
+
     update(deltaTime: number) {
         let movementSpeed = this.movementSpeed;
-        if (this.keyPresses.ShiftLeft || this.keyPresses.ShiftRight) {
+        if (this.sprintIsActive) {
             movementSpeed *= 2;
         }
         const step = movementSpeed * deltaTime;
@@ -44,5 +64,12 @@ export default class PlayerMovement {
         } else if (this.keyPresses.KeyD) {
             this.fpsControls.moveRight(step);
         }
+
+        if (this.keyPresses.Space) {
+            this.camera.position.y += step;
+        } else if (this.keyPresses.ControlLeft) {
+            this.camera.position.y -= step;
+        }
     }
 }
+

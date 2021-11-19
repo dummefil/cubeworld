@@ -4,6 +4,7 @@ import Item from "../Item";
 
 export class Block {
 	mesh: THREE.Mesh;
+	isBreakable: boolean = true
 	public static width: number = 3;
 	width: number = Block.width;
 	material: THREE.MeshLambertMaterial;
