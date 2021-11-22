@@ -82,14 +82,14 @@ export default class PlayerCamera extends PerspectiveCamera {
                 for (let i = 0; i < intersects.length; i++) {
                     const block = intersects[i].object;
                     if (block.name === "Block" && block.parent) {
-                        const blockData = this.world.getBlock(block.position);
-                        if (blockData.isBreakable) {
-                            const item = blockData.getItem();
-                            this.player.inventory.add(item)
-                            console.log(block.parent);
-                            block.parent.remove(block);
-                            return;
-                        }
+                        // const blockData = this.world.getBlock(block.position);
+                        // if (blockData.isBreakable) {
+                        //     const item = blockData.getItem();
+                        //     this.player.inventory.add(item)
+                        //     console.log(block.parent);
+                        //     block.parent.remove(block);
+                        //     return;
+                        // }
                     }
                 }
             }

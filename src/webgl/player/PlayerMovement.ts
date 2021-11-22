@@ -3,12 +3,12 @@ import { PointerLockControls } from "three/examples/jsm/controls/PointerLockCont
 
 export default class PlayerMovement {
     private camera: Camera;
-    public movementSpeed: number = 10;
+    public movementSpeed = 10;
     private fpsControls: PointerLockControls;
     private keyPresses: { [key: string]: boolean };
-    private sprintIsActive: boolean = false;
+    private sprintIsActive = true;
 
-    constructor(camera: THREE.Camera, domElement: HTMLCanvasElement) {
+    constructor(camera: Camera, domElement: HTMLCanvasElement) {
         this.fpsControls = new PointerLockControls(camera, domElement);
         this.camera = camera;
         const context = this;
@@ -25,19 +25,19 @@ export default class PlayerMovement {
         window.addEventListener('keydown', (event: KeyboardEvent) => {
             keyPresses[event.code] = true;
 
-            if (event.code === 'KeyW') {
-                doubleWPress++
-                if (doubleWPress === 2) {
-                    timeout = setTimeout(() => {
-                        this.sprintIsActive = true;
-                        clearTimeout(timeout);
-                    }, 150)
-                } else if (doubleWPress > 2) {
-                    doubleWPress = 0;
-                    this.sprintIsActive = false;
-                }
-                
-            }
+            // if (event.code === 'KeyW') {
+            //     doubleWPress++
+            //     if (doubleWPress === 2) {
+            //         timeout = setTimeout(() => {
+            //             this.sprintIsActive = true;
+            //             clearTimeout(timeout);
+            //         }, 150)
+            //     } else if (doubleWPress > 2) {
+            //         doubleWPress = 0;
+            //         this.sprintIsActive = false;
+            //     }
+            //
+            // }
             console.log(event);
         }, false)
 

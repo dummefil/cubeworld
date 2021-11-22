@@ -1,6 +1,7 @@
 <!doctype html>
 
 <html lang="en">
+
 <head>
 	<title>three.ts-template</title>
 	<meta charset="utf-8">
@@ -8,7 +9,8 @@
 	<meta name="description" content="ThreeJS, TypeScript, GLSL, & Webpack boilerplate for quick prototyping.">
 	<meta name="author" content="Marquizzo">
 	<style type="text/css">
-		body, html{
+		body,
+		html {
 			margin: 0px;
 			padding: 0px;
 			overflow: hidden;
@@ -18,36 +20,53 @@
 			color: #fff;
 			line-height: 1;
 		}
+
 		main {
 			width: 100%;
 			height: 100%;
 			overflow: hidden;
 		}
+
 		header {
 			position: absolute;
 			top: 100px;
 			left: 0;
 		}
-		h1, p {
+
+		h1,
+		p {
 			margin: 0;
+		}
+
+		.UI-bar {
+			position: absolute;
+			margin-left: auto;
+			margin-right: auto;
+			left: 0;
+			right: 0;
+			text-align: center;
+			bottom: 0;
+			width: 758px;
+			height: 72px;
+			background: grey;
 		}
 	</style>
 </head>
+
 <body>
+	<main id="pageMain">
+		<canvas id="webgl-canvas"></canvas>
+		<header>
+			<div class="inventory"></div>
+			<button class='inventory-add'>добавить</button>
+			<button class="inventory-delete">удалить</button>
+		</header>
+	</main>
 
-<main id="pageMain">
-<canvas id="webgl-canvas"></canvas>
-<header>
-	<div class="inventory"></div>
-	<button class='inventory-add'>добавить</button>
-	<button class="inventory-delete">удалить</button>
-</header>
-</main>
-
-<!-- JS Bundle --> 
-<script src="js/main.js"></script>
-<script>
-	javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='//mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
-</script>
+	<script src="js/main.js"></script>
+	<script>
+		javascript: (function () { var script = document.createElement('script'); script.onload = function () { var stats = new Stats(); document.body.appendChild(stats.dom); requestAnimationFrame(function loop() { stats.update(); requestAnimationFrame(loop) }); }; script.src = '//mrdoob.github.io/stats.js/build/stats.min.js'; document.head.appendChild(script); })()
+	</script>
 </body>
+
 </html>

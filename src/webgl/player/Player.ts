@@ -10,7 +10,7 @@ export default class Player {
     constructor(scene: THREE.Scene, domElement: HTMLCanvasElement, world: World){
         this.inventory = new Inventory(64);
         this.camera = new PlayerCamera(scene, this, world);
-		this.camera.position.y = 10;
+        this.camera.position.y = 10;
 		this.camera.rotateY(180);
         this.movement = new PlayerMovement(this.camera, domElement)
     }
