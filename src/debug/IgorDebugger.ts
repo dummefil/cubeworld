@@ -1,3 +1,5 @@
+import { stringifyObject } from "Utils";
+
 enum CONSOLE_STATUS {
     INFO = "info",
     WARN = "warn",
@@ -31,7 +33,7 @@ export class IgorDebugger {
                 original.call(original, object);
                 // }
                 if (object instanceof Object) {
-                    this.printMessage(`[${status}] ${JSON.stringify(object, null, 2)}`,);
+                    this.printMessage(`[${status}] ${stringifyObject(object, 0, 1)}`,);
                 } else {
                     this.printMessage(`[${status}] ${object.toString()}`,);
                 }
