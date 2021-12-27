@@ -15,6 +15,14 @@ export default class PlayerMovement {
 
         document.body.addEventListener('click', function () {
             context.fpsControls.lock();
+            window.userStateFocused = true;
+            document.body.focus()
+        }, false);
+        document.body.addEventListener('keydown', function (event) {
+            if (event.keyCode == 27) {
+                window.userStateFocused = false;
+                document.body.blur()
+            }
         }, false);
 
         const keyPresses = {};

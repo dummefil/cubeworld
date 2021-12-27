@@ -77,19 +77,21 @@ export default class PlayerCamera extends PerspectiveCamera {
         const onMouseClick = (event: MouseEvent) => {
             const { which } = event;
             console.log(event);
-            if (which === ClickType.LeftClick) {
+            if (which === ClickType.LeftClick && window.userStateFocused) {
                 const intersects = this.raycaster.intersectObjects(this.scene.children);
                 for (let i = 0; i < intersects.length; i++) {
                     const block = intersects[i].object;
                     if (block.name === "Block" && block.parent) {
-                        // const blockData = this.world.getBlock(block.position);
-                        // if (blockData.isBreakable) {
-                        //     const item = blockData.getItem();
-                        //     this.player.inventory.add(item)
-                        //     console.log(block.parent);
-                        //     block.parent.remove(block);
-                        //     return;
-                        // }
+                        const { x, y, z } = block.position
+                        const blockData = this.world.getVoxel(x, y, z);
+                        console.log(blockData);
+                        if (blockData.isBreakable) {
+                            const item = blockData.getItem();
+                            this.player.inventory.add(item)
+                            console.log(block.parent);
+                            block.parent.remove(block);
+                            return;
+                        }
                     }
                 }
             }
