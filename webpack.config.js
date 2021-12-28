@@ -1,21 +1,28 @@
 const webpack = require("webpack");
 const path = require("path");
 
-// http://webpack.github.io/docs/configuration.html
-module.exports = {
-	entry:{
-		main: "./src/App.ts",
-	},
-	devtool: 'eval',
-	// Outputs compiled bundle to `./web/js/main.js`
-	output:{
-		path: __dirname + "/web/",
+const common = {
+	mode: 'development',
+	output: {
 		filename: "js/[name].js"
 	},
+}
 
+const electronConfig = Object.assign(common, {
+	entry: {
+		main: "./Run.ts",
+	},
+	target: 'electron-main',
+})
+
+const webConfig = Object.assign(common, {
+	entry: {
+		main: "./src/App.ts",
+	},
+	target: 'web',
+	devtool: 'eval',
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
-
 		// Shortcuts to avoid up-one-level hell: 
 		// Turns "../../../utils" into "Utils"
 		alias: {
@@ -23,15 +30,15 @@ module.exports = {
 		},
 	},
 
-	module:{
+	module: {
 		// Test file extension to run loader
 		rules: [
 			{
-				test: /\.(glsl|vs|fs)$/, 
+				test: /\.(glsl|vs|fs)$/,
 				loader: "ts-shader-loader"
 			},
 			{
-				test: /\.tsx?$/, 
+				test: /\.tsx?$/,
 				exclude: [/node_modules/, /tsOld/],
 				loader: "ts-loader"
 			}
@@ -45,4 +52,6 @@ module.exports = {
 		publicPath: "/web/",
 		disableHostCheck: true
 	}
-}
+})
+
+module.exports = [webConfig, electronConfig]

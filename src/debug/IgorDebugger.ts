@@ -29,13 +29,13 @@ export class IgorDebugger {
             console.log(_status);
             originals[_status] = original;
             const handler = (object: string | Error | Object) => {
-                // if (this.filter.indexOf[_status] > -1 && typeof original !== 'function') {
-                original.call(original, object);
-                // }
-                if (object instanceof Object) {
-                    this.printMessage(`[${status}] ${stringifyObject(object, 0, 1)}`,);
-                } else {
-                    this.printMessage(`[${status}] ${object.toString()}`,);
+                if (this.filter.indexOf[_status] > -1 && typeof original !== 'function') {
+                    original.call(original, object);
+                    if (object instanceof Object) {
+                        this.printMessage(`[${status}] ${stringifyObject(object, 0, 1)}`,);
+                    } else {
+                        this.printMessage(`[${status}] ${object.toString()}`,);
+                    }
                 }
             }
             if (_status === CONSOLE_STATUS.INFO) {
