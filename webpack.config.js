@@ -1,28 +1,25 @@
 const webpack = require("webpack");
 const path = require("path");
 
-const common = {
+console.log(__dirname);
+// http://webpack.github.io/docs/configuration.html
+module.exports = {
 	mode: 'development',
-	output: {
-		filename: "js/[name].js"
-	},
-}
-
-const electronConfig = Object.assign(common, {
-	entry: {
-		main: "./Run.ts",
-	},
-	target: 'electron-main',
-})
-
-const webConfig = Object.assign(common, {
 	entry: {
 		main: "./src/App.ts",
 	},
-	target: 'web',
 	devtool: 'eval',
+	// Outputs compiled bundle to `./web/js/main.js`
+	output: {
+		// path: __dirname + "/dist/",
+		filename: "[name].js",
+		path: path.join(__dirname, 'build/js'),
+		publicPath: '/build/js'
+	},
+
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
+
 		// Shortcuts to avoid up-one-level hell: 
 		// Turns "../../../utils" into "Utils"
 		alias: {
@@ -49,9 +46,8 @@ const webConfig = Object.assign(common, {
 	devServer: {
 		host: "0.0.0.0",
 		port: 8000,
-		publicPath: "/web/",
-		disableHostCheck: true
+		static: {
+			directory: path.join(__dirname, '.'),
+		}
 	}
-})
-
-module.exports = [webConfig, electronConfig]
+}

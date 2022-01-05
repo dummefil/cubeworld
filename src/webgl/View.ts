@@ -1,13 +1,17 @@
 import Player from './player/Player';
 import * as THREE from "three";
 import Light from "./Light";
-import ChunkGenerator from './Generator';
 import World from './World';
+import AudioService from '../AudioService';
+import Physics from './Physics';
+import Pig from './mobs/Pig2';
+import { BLOCKS } from './BlocksEnum';
 
 export default class View {
 	private readonly renderer: THREE.WebGLRenderer;
 	private readonly scene: THREE.Scene;
 	private player: Player;
+	private audioService: AudioService;
 
 	constructor(canvasElem: HTMLCanvasElement) {
 		this.renderer = new THREE.WebGLRenderer({
@@ -31,96 +35,49 @@ export default class View {
 		]);
 		this.scene.background = texture;
 		const light = new Light(this.scene);
-		const voxelTexture = new THREE.TextureLoader().load('textures/texture-atlas.png');
-		voxelTexture.magFilter = THREE.NearestFilter;
-		voxelTexture.minFilter = THREE.NearestFilter;
 
 		const tileSize = 16;
-		const tileTextureWidth =  256;
-		const tileTextureHeight =  64;
-		const cellSize =  16;
+		const tileTextureWidth = 256;
+		const tileTextureHeight = 64;
+		const cellSize = 16;
 
-		const world = new World({
+		const worldOptions = {
 			tileSize,
 			tileTextureWidth,
 			tileTextureHeight,
 			cellSize
-		});
-
-		const material = new THREE.MeshLambertMaterial({
-			map: voxelTexture,
-			side: THREE.DoubleSide,
-			alphaTest: 0.1,
-			transparent: false,
-		});
-
-		const cellIdToMesh = {};
-		const updateCellGeometry = (x: number, y: number, z:number) => {
-			const cellX = Math.floor(x / cellSize);
-			const cellY = Math.floor(y / cellSize);
-			const cellZ = Math.floor(z / cellSize);
-			const cellId = world.computeCellId(x, y, z);
-			let mesh = cellIdToMesh[cellId];
-			const geometry = mesh ? mesh.geometry : new THREE.BufferGeometry();
-
-			const {positions, normals, uvs, indices} = world.generateGeometryDataForCell(cellX, cellY, cellZ);
-			const positionNumComponents = 3;
-			geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents));
-			const normalNumComponents = 3;
-			geometry.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents));
-			const uvNumComponents = 2;
-			geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
-			geometry.setIndex(indices);
-			geometry.computeBoundingSphere();
-
-			if (!mesh) {
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.name = cellId;
-				cellIdToMesh[cellId] = mesh;
-				this.scene.add(mesh);
-				mesh.position.set(cellX * cellSize, cellY * cellSize, cellZ * cellSize);
-			}
 		}
 
-		const neighborOffsets = [
-			[ 0,  0,  0], // self
-			[-1,  0,  0], // left
-			[ 1,  0,  0], // right
-			[ 0, -1,  0], // down
-			[ 0,  1,  0], // up
-			[ 0,  0, -1], // back
-			[ 0,  0,  1], // front
-		];
-		function updateVoxelGeometry(x: number, y: number, z:number) {
-			const updatedCellIds = {};
-			for (const offset of neighborOffsets) {
-				const ox = x + offset[0];
-				const oy = y + offset[1];
-				const oz = z + offset[2];
-				const cellId = world.computeCellId(ox, oy, oz);
-				if (!updatedCellIds[cellId]) {
-					updatedCellIds[cellId] = true;
-					updateCellGeometry(ox, oy, oz);
+
+		Physics(this.scene)
+		const world = new World(worldOptions, this.scene);
+		const waterTexture = new THREE.TextureLoader().load('textures/dirt.png');
+
+		const radius = 16
+		const worldType = 'flat';
+		if (worldType === 'flat') {
+			for (let y = 0; y < cellSize; ++y) {
+				for (let z = 0; z < cellSize * radius; ++z) {
+					for (let x = 0; x < cellSize * radius; ++x) {
+						// const height = (Math.sin(x / cellSize * Math.PI * Math.random()));
+						const height = cellSize;
+						if (y < height) {
+							world.setVoxel(x, y, z, BLOCKS.Dirt);
+						}
+					}
 				}
 			}
 		}
 
-		// for (let y = 0; y < cellSize; ++y) {
-		// 	for (let z = 0; z < cellSize; ++z) {
-		// 		for (let x = 0; x < cellSize; ++x) {
-		// 			const height = (Math.sin(x / cellSize * Math.PI * 2) + Math.sin(z / cellSize * Math.PI * 3)) * (cellSize / 6) + (cellSize / 2);
-		// 			if (y < height) {
-		// 				world.setVoxel(x, y, z, randInt(1, 17));
-		// 			}
-		// 		}
-		// 	}
-		// }
-		const generator = new ChunkGenerator(this.scene, world);
-		updateVoxelGeometry(1, 1, 1);  // 0,0,0 will generate
-
+		Object.keys(world.chunks).forEach((chunkId) => {
+			const [x, y, z] = chunkId.split(',').map((v) => parseInt(v))
+			world.updateCellGeometry(x * cellSize, y * cellSize, z * cellSize);
+		})
+		const pig = new Pig(this.scene)
 
 		this.player = new Player(this.scene, this.renderer.domElement, world)
 		this.scene.add(this.player.camera);
+		this.audioService = new AudioService(this.player.camera)
 		this.onWindowResize(window.innerWidth, window.innerHeight);
 	}
 

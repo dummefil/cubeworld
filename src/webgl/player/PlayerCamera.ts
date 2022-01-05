@@ -1,8 +1,12 @@
-import { PerspectiveCamera, Raycaster, Vector2 } from "three";
+import { BlockDirt } from './../block/BlockDirt';
+import { BlockWater } from './../block/BlockWater';
+import { BlockData } from './../block/BlockData';
+import { PerspectiveCamera, Raycaster, Vector2, Vector3 } from "three";
 import THREE = require("three");
+import { Block } from "../block/Block";
 import World from "../World";
 import Player from "./Player";
-
+import { BLOCKS } from '../BlocksEnum';
 enum HandEnum {
     mainHand,
     offHand
@@ -12,6 +16,19 @@ enum ClickType {
     LeftClick = 1,
     RightClick = 2,
     MiddleClick = 3
+}
+
+function deleteOnTimer({ x, y, z }: THREE.Vector3, scene: THREE.Scene, timeInSec: number) {
+    const geometry = new THREE.SphereGeometry(1, 12);
+    const wireframe = new THREE.WireframeGeometry(geometry);
+    const line = new THREE.LineSegments(wireframe);
+    line.position.set(x, y, z);
+    scene.add(line);
+    // scene.add(sphere)
+    setTimeout(() => {
+        // scene.remove(sphere);
+        scene.remove(line);
+    }, timeInSec * 1000)
 }
 
 export default class PlayerCamera extends PerspectiveCamera {
@@ -29,7 +46,6 @@ export default class PlayerCamera extends PerspectiveCamera {
         this.player = player;
         this.world = world;
         this.addCrosshair();
-        this.addHand();
         this.addEvents();
     }
 
@@ -72,28 +88,54 @@ export default class PlayerCamera extends PerspectiveCamera {
     }
 
     addEvents() {
-        this.raycaster = new THREE.Raycaster();
-        this.raycaster.far = 100;
         const onMouseClick = (event: MouseEvent) => {
             const { which } = event;
             console.log(event);
             if (which === ClickType.LeftClick && window.userStateFocused) {
-                const intersects = this.raycaster.intersectObjects(this.scene.children);
-                for (let i = 0; i < intersects.length; i++) {
-                    const block = intersects[i].object;
-                    if (block.name === "Block" && block.parent) {
-                        const { x, y, z } = block.position
-                        const blockData = this.world.getVoxel(x, y, z);
-                        console.log(blockData);
-                        if (blockData.isBreakable) {
-                            const item = blockData.getItem();
-                            this.player.inventory.add(item)
-                            console.log(block.parent);
-                            block.parent.remove(block);
-                            return;
-                        }
+                const len = 3;
+                const from = this.position.clone();
+                const direction = new Vector3(0, 0, -len).applyQuaternion(this.quaternion);
+                const to = from.add(direction);
+                const intersect = this.world.intersectRay(from, new Vector3(0, 0, len).applyQuaternion(this.quaternion));
+                // deleteOnTimer(to, this.scene, 10)
+                if (intersect) {
+                    const [x, y, z] = intersect.position;
+                    const blockId = this.world.getVoxel(x, y, z);
+                    let blockData: BlockData;
+                    if (blockId === BLOCKS.Water) {
+                        blockData = BlockWater.data;
                     }
+                    if (blockId === BLOCKS.Dirt) {
+                        blockData = BlockDirt.data;
+                    }
+                    if (blockData.isBreakable) {
+                        this.world.deleteVoxel(x, y, z);
+                        this.world.updateVoxelGeometry(x, y, z);
+                        console.log('block destroyed :( ');
+                        const block = new Block(new Vector3(x, y, z))
+                        this.scene.add(block.mesh);
+                    }
+
                 }
+                // const blockData = this.world.getVoxel(x, y, z);
+
+                // console.log(blockData);
+                // for (let i = 0; i < intersects.length; i++) {
+
+
+                // if (block.name === "Block" && block.parent) {
+                //     const { x, y, z } = block.position
+                //     const blockData = this.world.getVoxel(x, y, z);
+                //     console.log(blockData);
+                //     if (blockData.isBreakable) {
+                //         const item = blockData.getItem();
+                //         this.player.inventory.add(item)
+                //         console.log(block.parent);
+                //         block.parent.remove(block);
+                //         return;
+                //     }
+                // }
+                // }
             }
             if (which === ClickType.RightClick) {
                 console.log('Right click mouse')
@@ -111,7 +153,7 @@ export default class PlayerCamera extends PerspectiveCamera {
         this.center = new Vector2(x, y);
     }
     update() {
-        this.raycaster.setFromCamera(this.center, this);
+        // this.raycaster.setFromCamera(this.center, this);
     }
 
 }

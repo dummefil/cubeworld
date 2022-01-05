@@ -1,3 +1,4 @@
+import { BLOCKS } from './BlocksEnum';
 import Item from "./Item";
 
 interface IInventory {
@@ -21,7 +22,7 @@ export default class Inventory implements IInventory {
         this.deleteBtn = document.querySelector('.inventory-delete')
 
         this.addBtn.addEventListener('click', () => {
-            this.add(new Item())
+            this.add(new Item(64, 1, BLOCKS.Water))
         })
     }
     add(item: Item) {

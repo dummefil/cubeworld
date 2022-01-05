@@ -1,8 +1,9 @@
 import * as THREE from "three";
 
 export default class Light {
-    constructor(parentScene: THREE.Scene) {
+    constructor(scene: THREE.Scene) {
         const hemiLight = new THREE.HemisphereLight('white', 'white', 1);
-        parentScene.add(hemiLight);
+        scene.add(new THREE.HemisphereLightHelper(hemiLight, 15));
+        scene.add(hemiLight);
     }
 }
