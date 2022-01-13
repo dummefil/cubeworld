@@ -4,7 +4,7 @@ import Light from "./Light";
 import World from './World';
 import AudioService from '../AudioService';
 import Physics from './Physics';
-import Pig from './mobs/Pig2';
+import Pig from './mobs/Pig';
 import { BLOCKS } from './BlocksEnum';
 
 export default class View {
