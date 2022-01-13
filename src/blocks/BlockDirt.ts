@@ -1,4 +1,4 @@
-import { BLOCKS } from './../BlocksEnum';
+import { BLOCKS } from './BlocksEnum';
 import { Vector3 } from 'three';
 import THREE = require('three');
 import { Block } from "./Block";

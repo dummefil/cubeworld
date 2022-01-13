@@ -1,5 +1,5 @@
-import { BLOCKS } from './BlocksEnum';
-import Item from "./Item";
+import { BLOCKS } from './blocks/BlocksEnum';
+import Item from "./items/Item";
 
 interface IInventory {
     add(item: Item): void | Item
@@ -11,19 +11,19 @@ export default class Inventory implements IInventory {
     private array: Item[]
 
     private el: HTMLElement;
-    private addBtn: HTMLButtonElement;
-    private deleteBtn: HTMLButtonElement;
+    // private addBtn: HTMLButtonElement;
+    // private deleteBtn: HTMLButtonElement;
 
     constructor(maxSize: number) {
         this.maxSize = maxSize;
         this.array = [];
         this.el = document.querySelector('.inventory')
-        this.addBtn = document.querySelector('.inventory-add')
-        this.deleteBtn = document.querySelector('.inventory-delete')
+        // this.addBtn = document.querySelector('.inventory-add')
+        // this.deleteBtn = document.querySelector('.inventory-delete')
 
-        this.addBtn.addEventListener('click', () => {
-            this.add(new Item(64, 1, BLOCKS.Water))
-        })
+        // this.addBtn.addEventListener('click', () => {
+        //     this.add(new Item(64, 1, BLOCKS.Water))
+        // })
     }
     add(item: Item) {
         for (let i = 0; i < this.array.length; i++) {

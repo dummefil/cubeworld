@@ -1,7 +1,7 @@
 import { BlockData } from './BlockData';
 import * as THREE from "three";
 import { Vector3 } from "three";
-import Item from "../Item";
+import Item from "../items/Item";
 
 const texture = new THREE.TextureLoader().load('textures/dirt.png');
 export class Block implements BlockData {

@@ -6,7 +6,7 @@ console.log(__dirname);
 module.exports = {
 	mode: 'development',
 	entry: {
-		main: "./src/App.ts",
+		main: "./src/Startup.ts",
 	},
 	devtool: 'eval',
 	// Outputs compiled bundle to `./web/js/main.js`

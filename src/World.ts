@@ -1,4 +1,16 @@
-import THREE = require("three")
+import {
+    Vector3
+    , Scene,
+    MathUtils,
+    NearestFilter,
+    MeshLambertMaterial,
+    BufferGeometry,
+    BufferAttribute,
+    TextureLoader,
+    Mesh,
+    FrontSide,
+    BoxHelper
+} from 'three'
 
 export type WorldOptions = {
     cellSize: number
@@ -7,17 +19,30 @@ export type WorldOptions = {
     tileTextureHeight: number
 }
 
+const tileSize = 16;
+const tileTextureWidth = 256;
+const tileTextureHeight = 64;
+const cellSize = 16;
+const worldType = 'flat';
+export const worldOptions = {
+    tileSize,
+    tileTextureWidth,
+    tileTextureHeight,
+    cellSize,
+    worldType
+}
+
 export default class World {
     cellSize: number
     tileSize: number
     tileTextureWidth: number
     tileTextureHeight: number
     cellSliceSize: number
-    scene: THREE.Scene
+    scene: Scene
     chunks = {}
     cellIdToMesh = {}
 
-    constructor(options: WorldOptions, scene: THREE.Scene) {
+    constructor(options: WorldOptions, scene: Scene) {
         this.cellSize = options.cellSize;
         this.tileSize = options.tileSize;
         this.scene = scene;
@@ -28,9 +53,9 @@ export default class World {
     }
     computeVoxelOffset(x: number, y: number, z: number) {
         const { cellSize, cellSliceSize } = this;
-        const voxelX = THREE.MathUtils.euclideanModulo(x, cellSize) | 0;
-        const voxelY = THREE.MathUtils.euclideanModulo(y, cellSize) | 0;
-        const voxelZ = THREE.MathUtils.euclideanModulo(z, cellSize) | 0;
+        const voxelX = MathUtils.euclideanModulo(x, cellSize) | 0;
+        const voxelY = MathUtils.euclideanModulo(y, cellSize) | 0;
+        const voxelZ = MathUtils.euclideanModulo(z, cellSize) | 0;
         return voxelY * cellSliceSize +
             voxelZ * cellSize +
             voxelX;
@@ -137,7 +162,7 @@ export default class World {
         };
     }
 
-    intersectRay(start: THREE.Vector3, end: THREE.Vector3) {
+    intersectRay(start: Vector3, end: Vector3) {
         let dx = end.x - start.x;
         let dy = end.y - start.y;
         let dz = end.z - start.z;
@@ -292,43 +317,41 @@ export default class World {
         const cellId = this.computeCellId(x, y, z);
         let mesh = this.cellIdToMesh[cellId];
 
-        const geometry = mesh ? mesh.geometry : new THREE.BufferGeometry();
+        const geometry = mesh ? mesh.geometry : new BufferGeometry();
 
         const { positions, normals, uvs, indices } = this.generateGeometryDataForCell(cellX, cellY, cellZ);
         const positionNumComponents = 3;
-        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents));
+        geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), positionNumComponents));
         const normalNumComponents = 3;
-        geometry.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents));
+        geometry.setAttribute('normal', new BufferAttribute(new Float32Array(normals), normalNumComponents));
         const uvNumComponents = 2;
-        geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
+        geometry.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), uvNumComponents));
         geometry.setIndex(indices);
         geometry.computeBoundingSphere();
 
-        const voxelTexture = new THREE.TextureLoader().load('textures/texture-atlas.png');
-        voxelTexture.magFilter = THREE.NearestFilter;
-        voxelTexture.minFilter = THREE.NearestFilter;
-        const material = new THREE.MeshLambertMaterial({
+        const voxelTexture = new TextureLoader().load('textures/texture-atlas.png');
+        voxelTexture.magFilter = NearestFilter;
+        voxelTexture.minFilter = NearestFilter;
+        const material = new MeshLambertMaterial({
             map: voxelTexture,
-            side: THREE.DoubleSide,
+            side: FrontSide,
             alphaTest: 0.1,
             transparent: false,
         });
 
         if (!mesh) {
-            mesh = new THREE.Mesh(geometry, material);
+            mesh = new Mesh(geometry, material);
             mesh.name = cellId;
             this.cellIdToMesh[cellId] = mesh;
             this.scene.add(mesh);
             mesh.position.set(cellX * cellSize, cellY * cellSize, cellZ * cellSize);
         }
 
-        // const wireframe = new THREE.WireframeGeometry(geometry);
-        // const line = new THREE.LineSegments(wireframe);
+        // const wireframe = new WireframeGeometry(geometry);
+        // const line = new LineSegments(wireframe);
         // this.scene.add(line);
-        this.scene.add(new THREE.BoxHelper(mesh));
+        this.scene.add(new BoxHelper(mesh));
     }
-
-
 
     updateVoxelGeometry(x: number, y: number, z: number) {
         const neighborOffsets = [

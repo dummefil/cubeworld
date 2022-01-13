@@ -28,8 +28,6 @@ export default class PlayerMovement {
         const keyPresses = {};
         this.keyPresses = keyPresses;
 
-        let doubleWPress = 0;
-        let timeout: NodeJS.Timeout;
         window.addEventListener('keydown', (event: KeyboardEvent) => {
             keyPresses[event.code] = true;
 

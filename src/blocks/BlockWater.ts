@@ -1,4 +1,4 @@
-import { BLOCKS } from './../BlocksEnum';
+import { BLOCKS } from './BlocksEnum';
 import { BlockData } from './BlockData';
 import { Block } from './Block';
 import { Vector3, Color } from 'three';
