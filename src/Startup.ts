@@ -3,10 +3,11 @@ import Player from './player/Player';
 import Light from "./Light";
 import { worldOptions } from './World';
 import World from './World';
-import AudioService from './system/AudioSystem';
+import AudioSystem from './system/AudioSystem';
 import KeyboardSystem from './system/KeyboardSystem';
-import { IgorDebugger } from "./debug/IgorDebugger";
+// import { IgorDebugger } from "./debug/IgorDebugger";
 // import Physics from './Physics';
+import { renderWorld } from './render/RenderWorld';
 
 const canvas = <HTMLCanvasElement>document.getElementById("webgl-canvas");
 const renderer = new WebGLRenderer({
@@ -32,7 +33,7 @@ UIBar.classList.add('UI-bar')
 canvas.parentElement.append(UIBar);
 
 const light = new Light(scene);
-const audio = new AudioService();
+const audio = new AudioSystem();
 const keyboard = new KeyboardSystem();
 
 const world = new World(worldOptions, scene);
@@ -52,6 +53,8 @@ const gameInstance = {
 
 window.game = gameInstance;
 
+renderWorld(worldOptions);
+
 function render(time: number) {
     const deltaTime = timer.getDelta();
     player.update(deltaTime);
@@ -62,9 +65,9 @@ render(0);
 
 function resizeWindow() {
     const { innerHeight, innerWidth } = window
-    this.renderer.setSize(innerWidth, innerHeight);
-    this.player.camera.aspect = innerWidth / innerHeight;
-    this.player.camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+    player.camera.aspect = innerWidth / innerHeight;
+    player.camera.updateProjectionMatrix();
 }
 
 resizeWindow();

@@ -1,6 +1,6 @@
 import {
-    Vector3
-    , Scene,
+    Vector3,
+    Scene,
     MathUtils,
     NearestFilter,
     MeshLambertMaterial,
@@ -17,6 +17,7 @@ export type WorldOptions = {
     tileSize: number
     tileTextureWidth: number
     tileTextureHeight: number
+    worldType: string
 }
 
 const tileSize = 16;

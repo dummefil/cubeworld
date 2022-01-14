@@ -1,8 +1,7 @@
+import { WorldOptions } from 'src/World';
 import { BLOCKS } from "src/blocks/BlocksEnum";
-import { worldOptions } from 'src/World';
-const { worldType, cellSize } = worldOptions;
 
-export function renderWorld() {
+export function renderWorld({ worldType, cellSize }: WorldOptions) {
     const { world } = window.game;
     const radius = 16;
     if (worldType === 'flat') {

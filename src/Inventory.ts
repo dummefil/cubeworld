@@ -1,8 +1,7 @@
-import { BLOCKS } from './blocks/BlocksEnum';
-import Item from "./items/Item";
+import Item from "./Item";
 
 interface IInventory {
-    add(item: Item): void | Item
+    add(item: Item): Item | void
     remove(index: number): void;
 }
 

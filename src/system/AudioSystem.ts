@@ -1,6 +1,6 @@
 import { AudioListener, Audio, AudioLoader } from 'three'
 
-export default class AudioService extends AudioListener {
+export default class AudioSystem extends AudioListener {
     constructor() {
         super()
         const listener = new AudioListener();

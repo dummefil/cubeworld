@@ -1,4 +1,4 @@
-import { stringifyObject } from "Utils";
+import { stringifyObject } from "./DebugHelpers";
 
 enum CONSOLE_STATUS {
     INFO = "info",

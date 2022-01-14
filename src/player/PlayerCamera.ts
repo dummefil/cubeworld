@@ -10,9 +10,9 @@ import {
     BoxGeometry,
     Euler
 } from "three";
-import World from "../World";
 import Player from "./Player";
 import Events from '../events/Events';
+import { deleteOnTimer } from "../debug/DebugHelpers";
 enum HandEnum {
     mainHand,
     offHand
@@ -80,37 +80,20 @@ export default class PlayerCamera extends PerspectiveCamera {
 
     addEvents() {
         const onMouseClick = (event: MouseEvent) => {
+            const { world, scene } = window.game;
             const { which } = event;
             console.log(event);
             if (which === ClickType.LeftClick && window.userStateFocused) {
-                // const len = 3;
-                // const from = this.position.clone();
-                // const direction = new Vector3(0, 0, -len).applyQuaternion(this.quaternion);
-                // const to = from.add(direction);
-                // const intersect = this.world.intersectRay(from, new Vector3(0, 0, len).applyQuaternion(this.quaternion));
-                // deleteOnTimer(to, this.scene, 10)
-                // if (intersect) {
-                //     Events.BlockBreak(intersect);
-                // }
-                // const blockData = this.world.getVoxel(x, y, z);
+                const len = 3;
+                const from = this.position.clone();
+                const direction = new Vector3(0, 0, -len).applyQuaternion(this.quaternion);
+                const to = from.add(direction);
+                const intersect = world.intersectRay(from, new Vector3(0, 0, len).applyQuaternion(this.quaternion));
+                deleteOnTimer(to, this.scene, 10)
+                if (intersect) {
+                    Events.BlockBreak(world, scene, intersect);
+                }
 
-                // console.log(blockData);
-                // for (let i = 0; i < intersects.length; i++) {
-
-
-                // if (block.name === "Block" && block.parent) {
-                //     const { x, y, z } = block.position
-                //     const blockData = this.world.getVoxel(x, y, z);
-                //     console.log(blockData);
-                //     if (blockData.isBreakable) {
-                //         const item = blockData.getItem();
-                //         this.player.inventory.add(item)
-                //         console.log(block.parent);
-                //         block.parent.remove(block);
-                //         return;
-                //     }
-                // }
-                // }
             }
             if (which === ClickType.RightClick) {
                 console.log('Right click mouse')

@@ -3,7 +3,8 @@ import { BlockData } from 'src/blocks/BlockData';
 import { BlockDirt } from 'src/blocks/BlockDirt';
 import { BlockWater } from 'src/blocks/BlockWater';
 import { BLOCKS } from 'src/blocks/BlocksEnum';
-import { Vector3 } from 'three';
+import { Vector3, Scene } from 'three';
+import World from 'src/World';
 
 type Intersect = {
     position: number[];
@@ -11,9 +12,9 @@ type Intersect = {
     voxel: any;
 }
 
-export function BlockBreak(intersect: Intersect) {
+export function BlockBreak(world: World, scene: Scene, intersect: Intersect) {
     const [x, y, z] = intersect.position;
-    const blockId = this.world.getVoxel(x, y, z);
+    const blockId = world.getVoxel(x, y, z);
     let blockData: BlockData;
 
     if (blockId === BLOCKS.Water) {
@@ -23,11 +24,11 @@ export function BlockBreak(intersect: Intersect) {
         blockData = BlockDirt.data;
     }
     if (blockData.isBreakable) {
-        this.world.deleteVoxel(x, y, z);
-        this.world.updateVoxelGeometry(x, y, z);
+        world.deleteVoxel(x, y, z);
+        world.updateVoxelGeometry(x, y, z);
         console.log('block destroyed :( ');
         const block = new Block(new Vector3(x, y, z))
-        this.scene.add(block.mesh);
+        scene.add(block.mesh);
     }
 
 }

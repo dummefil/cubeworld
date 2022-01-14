@@ -11,14 +11,14 @@ export default class PlayerMovement {
     constructor(camera: Camera, domElement: HTMLCanvasElement) {
         this.fpsControls = new PointerLockControls(camera, domElement);
         this.camera = camera;
-        const context = this;
 
-        document.body.addEventListener('click', function () {
-            context.fpsControls.lock();
+        document.body.addEventListener('click', () => {
+            this.fpsControls.lock();
+            console.log(this);
             window.userStateFocused = true;
             document.body.focus()
         }, false);
-        document.body.addEventListener('keydown', function (event) {
+        document.body.addEventListener('keydown', (event) => {
             if (event.keyCode == 27) {
                 window.userStateFocused = false;
                 document.body.blur()

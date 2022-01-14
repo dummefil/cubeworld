@@ -6,7 +6,7 @@
   "description": "mincrhfat",
   "main": "webpack.config.js",
   "scripts": {
-    "dev": "webpack serve",
+    "dev": "webpack serve --stats-error-details",
     "build": "webpack",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
