@@ -17,12 +17,6 @@ export default class Inventory implements IInventory {
         this.maxSize = maxSize;
         this.array = [];
         this.el = document.querySelector('.inventory')
-        // this.addBtn = document.querySelector('.inventory-add')
-        // this.deleteBtn = document.querySelector('.inventory-delete')
-
-        // this.addBtn.addEventListener('click', () => {
-        //     this.add(new Item(64, 1, BLOCKS.Water))
-        // })
     }
     add(item: Item) {
         for (let i = 0; i < this.array.length; i++) {
@@ -41,7 +35,6 @@ export default class Inventory implements IInventory {
                             this.array.push(item)
                         }
                     }
-                    this.el.innerHTML = JSON.stringify(this.array, null, 2);
                     return;
                 }
             }
@@ -49,10 +42,8 @@ export default class Inventory implements IInventory {
         if (this.array.length < this.maxSize) {
             this.array.push(item)
         }
-        this.el.innerHTML = JSON.stringify(this.array, null, 2);
     }
     remove(index: number) {
         delete this.array[index]
-        this.el.innerHTML = JSON.stringify(this.array, null, 2);
     }
 }

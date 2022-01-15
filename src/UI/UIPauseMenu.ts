@@ -1,6 +1,6 @@
-import { createHTMLElementFromString } from "src/utils/DOMUtils";
+import { UIBase, UIStyles } from "./UIBase";
 
-const UIPauseMenuStyles = {
+const UIPauseMenuStyles: UIStyles = {
     'display': 'none',
     'justifyContent': 'center',
     'alignItems': 'center',
@@ -24,29 +24,10 @@ const UIPauseMenuBody = `
     </div>
 `
 
-class UIPauseMenu {
-    element: HTMLElement;
+class UIPauseMenu extends UIBase {
     constructor() {
-        this.element = createHTMLElementFromString(UIPauseMenuBody);
-        this.handleStyles();
+        super(UIPauseMenuBody, UIPauseMenuStyles);
         this.handleEvents();
-    }
-
-    show() {
-        this.element.style.display = 'flex';
-        document.body.appendChild(this.element);
-    }
-
-    hide() {
-        this.element.style.display = 'none';
-        document.body.appendChild(this.element);
-    }
-
-    handleStyles() {
-        for (const key in UIPauseMenuStyles) {
-            const value = UIPauseMenuStyles[key];
-            this.element.style[key] = value;
-        }
     }
 
     handleEvents() {

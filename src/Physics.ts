@@ -40,10 +40,10 @@ export default class Physics {
     }
 
     addPhysics(object3D: Object3D) {
-        //todo create physics mesh, add to physics world
+        //TODO: create physics mesh, add to physics world
         // const physicsMesh = threeToCannon(object3D, { type: ShapeType.MESH });
         // this.physicsWorld.addBody(physicsMesh)
-        //todo remove from wolrd(how?)
+        //TODO: remove from wolrd(how?)
     }
 
     update(time: number) {

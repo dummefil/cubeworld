@@ -1,4 +1,4 @@
-export default class KeyboardService {
+export default class KeyboardSystem {
     private _keyPresses: Set<string>;
     private _doubleKeyPresses: Set<string>;
 

@@ -7,3 +7,9 @@ export function randInt(low: number, high: number): number {
 export function mod(n: number, m: number): number {
     return (n % m + m) % m;
 }
+
+export function isObject(object: any) {
+    return typeof object === 'object' &&
+        !Array.isArray(object) &&
+        object !== null
+}

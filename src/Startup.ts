@@ -5,7 +5,7 @@ import { worldOptions } from './World';
 import World from './World';
 import AudioSystem from './system/AudioSystem';
 import KeyboardSystem from './system/KeyboardSystem';
-// import { IgorDebugger } from "./debug/IgorDebugger";
+import "./debug/IgorDebugger";
 // import Physics from './Physics';
 import { renderWorld } from './render/RenderWorld';
 
@@ -44,7 +44,7 @@ const gameInstance = {
     scenes: [scene],
     world,
     player,
-    light, //todo do we need it here?
+    light, //TODO: do we need it here?
     audio,
     keyboard,
     renderer,
@@ -71,5 +71,4 @@ function resizeWindow() {
 }
 
 resizeWindow();
-// const igorDebugger = new IgorDebugger(document.querySelector('.Igor-container'))
 window.addEventListener("resize", resizeWindow);

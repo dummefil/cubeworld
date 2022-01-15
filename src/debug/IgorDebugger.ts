@@ -1,4 +1,42 @@
 import { stringifyObject } from "./DebugHelpers";
+import * as config from '../../config.json';
+import { UIBase, UIStyles } from "src/UI/UIBase";
+
+const UIIgorDebuggerBody = `
+	<div class="Igor-container">
+		<div class="Igor-elements">
+			<div class="Igor-roll-up mini-button">⛔</div>
+			<div class="Igor-maximize mini-button">⬆</div>
+			<div class="Igor-minimize mini-button">⬇</div>
+		</div>
+		<div class="Igor-messages"></div>
+		<button class="Igor-clear">clear</button>
+	</div>
+`
+
+const UIIgorDebuggerStyles: UIStyles = {
+    'position': 'absolute',
+    'top': '0',
+    'right': '0',
+    'width': '300px',
+    minHeight: '100px',
+    borderRadius: '8px',
+    backgroundColor: 'rgba(91, 152, 212, 0.74)',
+    'display': 'flex',
+    flexDirection: 'column',
+    maxHeight: '50vh',
+    overflowX: 'auto',
+    fontSize: '12px',
+
+    '.Igor-elements': {
+        display: 'flex',
+        'flexDirection': 'row-reverse',
+    },
+
+    '.Igor-clear': {
+        marginTop: 'auto',
+    }
+}
 
 enum CONSOLE_STATUS {
     INFO = "info",
@@ -7,18 +45,19 @@ enum CONSOLE_STATUS {
     DEBUG = "debug",
 }
 
-export class IgorDebugger {
-    private container: HTMLElement
-    private messageContainer: HTMLElement
-    private filter: CONSOLE_STATUS[] = [CONSOLE_STATUS.INFO, CONSOLE_STATUS.WARN, CONSOLE_STATUS.ERROR, CONSOLE_STATUS.DEBUG]
-    constructor(container: HTMLElement, filter?: CONSOLE_STATUS[]) {
-        if (filter) {
-            this.filter = filter;
+class UIIgorDebugger extends UIBase {
+    // private element: HTMLElement;
+    private messageElement: HTMLElement;
+
+    constructor() {
+        super(UIIgorDebuggerBody, UIIgorDebuggerStyles);
+        if (config.env !== 'development') {
+            return;
         }
-        this.container = container;
-        this.messageContainer = container.querySelector('.Igor-messages')
+        this.messageElement = this.element.querySelector('.Igor-messages')
+        this.handleEvents();
         this.bindConsole();
-        this.bindEvents();
+        this.show()
     }
 
     private bindConsole() {
@@ -29,7 +68,7 @@ export class IgorDebugger {
             console.log(_status);
             originals[_status] = original;
             const handler = (object: string | Error | Object) => {
-                if (this.filter.indexOf[_status] > -1 && typeof original !== 'function') {
+                if (typeof original !== 'function') {
                     original.call(original, object);
                     if (object instanceof Object) {
                         this.printMessage(`[${status}] ${stringifyObject(object, 0, 1)}`,);
@@ -48,22 +87,22 @@ export class IgorDebugger {
     }
 
     private parse(rawMessage: String) {
-        //todo validation, to string
+        //TODO: validation, to string
         return rawMessage;
     }
 
     private printMessage(rawMessage: String) {
         const message = this.parse(rawMessage);
-        this.messageContainer.innerHTML += `${message}<br>`
-        this.container.scrollTo({ left: 0, top: this.container.scrollHeight });
+        this.messageElement.innerHTML += `${message}<br>`
+        this.element.scrollTo({ left: 0, top: this.element.scrollHeight });
     }
 
     clear() {
-        this.messageContainer.innerHTML = ''
+        this.messageElement.innerHTML = ''
     }
 
-    bindEvents() {
-        const clearButton = this.container.querySelector('.Igor-clear');
+    handleEvents() {
+        const clearButton = this.element.querySelector('.Igor-clear');
         const clearButtonlistener = () => {
             this.clear();
         }
@@ -75,23 +114,26 @@ export class IgorDebugger {
         }
 
         const initialWindowSize = {
-            width: this.container.style.width,
-            height: this.container.style.height
+            width: this.element.style.width,
+            height: this.element.style.height
         }
 
-        const maximizeButton = this.container.querySelector('.Igor-maximize')
+        const maximizeButton = this.element.querySelector('.Igor-maximize')
         const maximizeButtonListener = () => {
-            this.container.style.width = maximizedSize.width
-            this.container.style.height = maximizedSize.height
+            this.element.style.width = maximizedSize.width
+            this.element.style.height = maximizedSize.height
         }
         maximizeButton.addEventListener('click', maximizeButtonListener)
 
 
-        const minimizeButton = this.container.querySelector('.Igor-minimize')
+        const minimizeButton = this.element.querySelector('.Igor-minimize')
         const minimizeButtonListener = () => {
-            this.container.style.width = initialWindowSize.width
-            this.container.style.height = initialWindowSize.height
+            this.element.style.width = initialWindowSize.width
+            this.element.style.height = initialWindowSize.height
         }
         minimizeButton.addEventListener('click', minimizeButtonListener)
     }
 }
+
+const UIIgorDebuggerInstance = new UIIgorDebugger();
+export default UIIgorDebuggerInstance;
