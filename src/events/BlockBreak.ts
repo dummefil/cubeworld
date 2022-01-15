@@ -23,7 +23,7 @@ export function BlockBreak(world: World, scene: Scene, intersect: Intersect) {
     if (blockId === BLOCKS.Dirt) {
         blockData = BlockDirt.data;
     }
-    if (blockData.isBreakable) {
+    if (blockData && blockData.isBreakable) {
         world.deleteVoxel(x, y, z);
         world.updateVoxelGeometry(x, y, z);
         console.log('block destroyed :( ');

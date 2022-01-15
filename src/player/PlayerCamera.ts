@@ -86,10 +86,10 @@ export default class PlayerCamera extends PerspectiveCamera {
             if (which === ClickType.LeftClick && window.userStateFocused) {
                 const len = 3;
                 const from = this.position.clone();
-                const direction = new Vector3(0, 0, -len).applyQuaternion(this.quaternion);
-                const to = from.add(direction);
+                // const direction = new Vector3(0, 0, -len).applyQuaternion(this.quaternion);
                 const intersect = world.intersectRay(from, new Vector3(0, 0, len).applyQuaternion(this.quaternion));
-                deleteOnTimer(to, this.scene, 10)
+                // const to = from.add(direction);
+                // deleteOnTimer(to, this.scene, 10)
                 if (intersect) {
                     Events.BlockBreak(world, scene, intersect);
                 }

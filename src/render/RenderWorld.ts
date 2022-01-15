@@ -3,7 +3,7 @@ import { BLOCKS } from "src/blocks/BlocksEnum";
 
 export function renderWorld({ worldType, cellSize }: WorldOptions) {
     const { world } = window.game;
-    const radius = 16;
+    const radius = 4;
     if (worldType === 'flat') {
         for (let y = 0; y < cellSize; ++y) {
             for (let z = 0; z < cellSize * radius; ++z) {

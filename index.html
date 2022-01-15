@@ -89,19 +89,44 @@
 			height: 72px;
 			background: grey;
 		}
+
+		.button {
+			border: black solid 3px;
+			background: #7F7F7F;
+			font-size: 48px;
+			color: white;
+			text-align: center;
+			width: 50vw;
+			margin-bottom: 40px;
+			font-weight: bold;
+			padding: 10px;
+			font-family: 'Times New Roman', Times, serif;
+			z-index: 1;
+			transition: cubic-bezier(.17, .15, .04, 1) all 1s;
+			cursor: pointer;
+		}
+
+		.button:hover {
+			background: #575757;
+			/* color: #7F7F7F; */
+		}
+
+		.button:first-child {
+			margin-bottom: 80px;
+		}
 	</style>
 </head>
 
 <body>
 	<main id="pageMain">
 		<canvas id="webgl-canvas"></canvas>
-		<header>
+		<!-- <header>
 			<div class="inventory"></div>
 			<button class='inventory-add'>добавить</button>
 			<button class="inventory-delete">удалить</button>
-		</header>
+		</header> -->
 	</main>
-	<div class="Igor-container">
+	<!-- <div class="Igor-container">
 		<div class="Igor-elements">
 			<div class="Igor-roll-up mini-button">⛔</div>
 			<div class="Igor-maximize mini-button">⬆</div>
@@ -109,9 +134,11 @@
 		</div>
 		<div class="Igor-messages"></div>
 		<button class="Igor-clear">clear</button>
-	</div>
+	</div> -->
 
 	<script src="/build/js/main.js"></script>
+	<script>
+	</script>
 	<!-- <script>
 																javascript: (function () { var script = document.createElement('script'); script.onload = function () { var stats = new Stats(); document.body.appendChild(stats.dom); requestAnimationFrame(function loop() { stats.update(); requestAnimationFrame(loop) }); }; script.src = '//mrdoob.github.io/stats.js/build/stats.min.js'; document.head.appendChild(script); })()
 		</script> -->

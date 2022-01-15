@@ -1,79 +1,60 @@
 import { Camera } from "three";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
+import UIPauseMenu from '../UI/UIPauseMenu';
 
 export default class PlayerMovement {
     private camera: Camera;
     public movementSpeed = 10;
     private fpsControls: PointerLockControls;
-    private keyPresses: { [key: string]: boolean };
-    private sprintIsActive = true;
 
     constructor(camera: Camera, domElement: HTMLCanvasElement) {
         this.fpsControls = new PointerLockControls(camera, domElement);
         this.camera = camera;
 
-        document.body.addEventListener('click', () => {
-            this.fpsControls.lock();
-            console.log(this);
-            window.userStateFocused = true;
-            document.body.focus()
-        }, false);
-        document.body.addEventListener('keydown', (event) => {
-            if (event.keyCode == 27) {
-                window.userStateFocused = false;
-                document.body.blur()
+
+        this.fpsControls.addEventListener('lock', function () {
+            console.log('locked')
+            if (!window.userStateFocused) {
+                UIPauseMenu.hide();
             }
-        }, false);
+        });
 
-        const keyPresses = {};
-        this.keyPresses = keyPresses;
+        this.fpsControls.addEventListener('unlock', function () {
+            console.log('unlocked')
+            if (window.userStateFocused) {
+                UIPauseMenu.show();
+            }
+        });
 
-        window.addEventListener('keydown', (event: KeyboardEvent) => {
-            keyPresses[event.code] = true;
-
-            // if (event.code === 'KeyW') {
-            //     doubleWPress++
-            //     if (doubleWPress === 2) {
-            //         timeout = setTimeout(() => {
-            //             this.sprintIsActive = true;
-            //             clearTimeout(timeout);
-            //         }, 150)
-            //     } else if (doubleWPress > 2) {
-            //         doubleWPress = 0;
-            //         this.sprintIsActive = false;
-            //     }
-            //
-            // }
-            console.log(event);
-        }, false)
-
-        window.addEventListener('keyup', keyUpListener, false);
-        function keyUpListener(event: KeyboardEvent) {
-            delete keyPresses[event.code]
-        }
+        document.addEventListener('click', (event: MouseEvent) => {
+            this.fpsControls.lock();
+        })
+        document.addEventListener('pointerlockchange', (event) => {
+            window.userStateFocused = !window.userStateFocused
+        });
     }
 
-
     update(deltaTime: number) {
+        const { keyboard } = window.game;
         let movementSpeed = this.movementSpeed;
-        if (this.sprintIsActive) {
+        if (keyboard.isDoubleKeyPressed('W')) {
             movementSpeed *= 2;
         }
         const step = movementSpeed * deltaTime;
-        if (this.keyPresses.KeyW) {
+        if (keyboard.isKeyPressed('W')) {
             this.fpsControls.moveForward(step);
-        } else if (this.keyPresses.KeyS) {
+        } else if (keyboard.isKeyPressed('S')) {
             this.fpsControls.moveForward(-step)
         }
-        if (this.keyPresses.KeyA) {
+        if (keyboard.isKeyPressed('A')) {
             this.fpsControls.moveRight(-step);
-        } else if (this.keyPresses.KeyD) {
+        } else if (keyboard.isKeyPressed('D')) {
             this.fpsControls.moveRight(step);
         }
 
-        if (this.keyPresses.Space) {
+        if (keyboard.isKeyPressed('Space')) {
             this.camera.position.y += step;
-        } else if (this.keyPresses.ControlLeft) {
+        } else if (keyboard.isKeyPressed('Control')) {
             this.camera.position.y -= step;
         }
     }

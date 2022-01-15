@@ -1,7 +1,6 @@
 import Inventory from "../Inventory"
 import PlayerMovement from "./PlayerMovement"
 import PlayerCamera from './PlayerCamera';
-import World from "../World";
 
 export default class Player {
     inventory: Inventory
