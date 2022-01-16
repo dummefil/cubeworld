@@ -13,3 +13,7 @@ export function isObject<T>(object: T) {
         !Array.isArray(object) &&
         object !== null
 }
+
+export function isFunction(functionToCheck: any) {
+    return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
+}

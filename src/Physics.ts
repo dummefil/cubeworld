@@ -16,7 +16,6 @@ export default class Physics {
     //TODO: MAKE ME OVERLOAD DADDY
     addPhysics(mesh: Object3D, isStatic?: boolean | number): void {
         console.warn('Object added')
-        console.warn(mesh.position)
         let mass;
         if (typeof isStatic === 'number') {
             mass = isStatic;
@@ -26,10 +25,8 @@ export default class Physics {
         //TODO: FIX ME
         //@ts-ignore
         const result = threeToCannon(mesh, { type: ShapeType.MESH });
-        console.log(result);
         const { shape } = result;
         const { x, y, z } = mesh.position;
-        console.log(mass);
         const body = new Body({
             mass,
             shape,
@@ -45,7 +42,6 @@ export default class Physics {
 
     private remove(index: number, [body, mesh]: [Body, Object3D]) {
         console.warn('Object removed')
-        console.warn(mesh.position)
         this._bodies.splice(index, 1);
         this._physicsWorld.removeBody(body);
         window.game.scene.remove(mesh);

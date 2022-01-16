@@ -1,23 +1,50 @@
+import KeyBinds from "./KeyBinds";
+
 export default class KeyboardSystem {
     private _keyPresses: Set<string>;
     private _doubleKeyPresses: Set<string>;
-
+    private _keyBinds: KeyBinds;
     constructor() {
         this._keyPresses = new Set();
         this._doubleKeyPresses = new Set();
+        this._keyBinds = new KeyBinds();
+
+
 
         const pressKey = (event: KeyboardEvent) => {
+            event.stopPropagation();
+            event.preventDefault();
+
+            const keyBind = this._keyBinds.buildKeyBind(event);
+            console.log(keyBind);
+            if (this._keyBinds.has(keyBind)) {
+                this._keyBinds.execute(keyBind);
+            }
+
             const code = this.sanitizeKey(event.code);
             this.addKey(code);
         }
 
         const unpressKey = (event: KeyboardEvent) => {
+            event.stopPropagation();
+            event.preventDefault();
+
             const code = this.sanitizeKey(event.code);
             this.removeKey(code);
         }
 
         window.addEventListener('keydown', pressKey);
         window.addEventListener('keyup', unpressKey);
+        //hack to prevent closing with hotkey ctrl+w, it will create prompt instead
+        // window.addEventListener(
+        //     'beforeunload',
+        //     (e) => {
+        //         e.preventDefault();
+        //         //required by chrom(ium)e
+        //         e.returnValue = '';
+        //     },
+        //     false
+        // );
     }
 
     private addKey(key: string) {
