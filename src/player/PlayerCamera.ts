@@ -13,6 +13,7 @@ import {
 import Player from "./Player";
 import Events from '../events/Events';
 import { deleteOnTimer } from "../debug/DebugHelpers";
+import { Block } from "src/blocks/Block";
 enum HandEnum {
     mainHand,
     offHand
@@ -20,8 +21,8 @@ enum HandEnum {
 
 enum ClickType {
     LeftClick = 1,
-    RightClick = 2,
-    MiddleClick = 3
+    MiddleClick = 2,
+    RightClick = 3
 }
 export default class PlayerCamera extends PerspectiveCamera {
     scene: Scene;
@@ -82,17 +83,20 @@ export default class PlayerCamera extends PerspectiveCamera {
         const onMouseClick = (event: MouseEvent) => {
             const { world, scene } = window.game;
             const { which } = event;
-            console.log(event);
-            if (which === ClickType.LeftClick && window.userStateFocused) {
-                const len = 3;
-                const from = this.position.clone();
-                // const direction = new Vector3(0, 0, -len).applyQuaternion(this.quaternion);
-                const intersect = world.intersectRay(from, new Vector3(0, 0, len).applyQuaternion(this.quaternion));
-                // const to = from.add(direction);
-                // deleteOnTimer(to, this.scene, 10)
-                if (intersect) {
-                    Events.BlockBreak(world, scene, intersect);
-                }
+            if (which === ClickType.LeftClick) {
+                //it's not working as intended :(
+                // const len = 3;
+                // const from = this.position.clone();
+                // // const direction = new Vector3(0, 0, -len).applyQuaternion(this.quaternion);
+                // const intersect = world.intersectRay(from, new Vector3(0, 0, len).applyQuaternion(this.quaternion));
+                // // const to = from.add(direction);
+                // // deleteOnTimer(to, this.scene, 10)
+                const { mesh } = new Block(new Vector3(20, 20, 20))
+                scene.add(mesh);
+                window.game.physics.addPhysics(mesh, false);
+                // if (intersect) {
+                //     Events.BlockBreak(world, scene, intersect);
+                // }
 
             }
             if (which === ClickType.RightClick) {

@@ -27,8 +27,9 @@ export function BlockBreak(world: World, scene: Scene, intersect: Intersect) {
         world.deleteVoxel(x, y, z);
         world.updateVoxelGeometry(x, y, z);
         console.log('block destroyed :( ');
-        const block = new Block(new Vector3(x, y, z))
-        scene.add(block.mesh);
+        const { mesh } = new Block(new Vector3(x, y, z))
+        scene.add(mesh);
+        window.game.physics.addPhysics(mesh, false);
     }
 
 }

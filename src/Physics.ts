@@ -1,54 +1,69 @@
-import { World, Vec3, Body, Box, Plane } from 'cannon-es'
-import * as THREE from 'three';
-import { Object3D } from 'three';
+import { World, Vec3, Body } from 'cannon-es'
+import { Object3D, Quaternion, Vector3 } from 'three';
 import { threeToCannon, ShapeType } from 'three-to-cannon';
 
 export default class Physics {
-    physicsWorld: World
+    private _physicsWorld: World;
+    private _bodies: [Body, Object3D][] = [];
+    private _maxNegativeHeight = -256;
     constructor() {
-        const { scene } = window.game;
         const physicsWorld = new World({
             gravity: new Vec3(0, -9.82, 0), // m/s²
         })
-        this.physicsWorld = physicsWorld;
-
-        // // Create a sphere body
-        // const radius = 1 // m
-        // const sphereBody = new Body({
-        //     mass: 1, // kg
-        //     shape: new Box(new Vec3(radius, radius, radius)),
-        // })
-        // sphereBody.position.set(50, 50, 50) // m
-        // physicsWorld.addBody(sphereBody)
-
-        // Create a static plane for the ground
-        // const groundBody = new Body({
-        //     type: Body.STATIC, // can also be achieved by setting the mass to 0
-        //     shape: new Plane(),
-        //     position: new Vec3(50, 16, 50)
-        // })
-        // groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0) // make it face up
-        // physicsWorld.addBody(groundBody)
-
-        // // Start the simulation loop
-        // const geometry = new THREE.BoxGeometry(radius, radius, radius);
-        // const material = new THREE.MeshNormalMaterial();
-        // const sphereMesh = new THREE.Mesh(geometry, material);
-        // scene.add(sphereMesh)
-
-        // sphereMesh.quaternion.copy(<unknown>sphereBody.quaternion as THREE.Quaternion)
+        this._physicsWorld = physicsWorld;
     }
 
-    addPhysics(object3D: Object3D) {
-        //TODO: create physics mesh, add to physics world
-        // const physicsMesh = threeToCannon(object3D, { type: ShapeType.MESH });
-        // this.physicsWorld.addBody(physicsMesh)
-        //TODO: remove from wolrd(how?)
+    //TODO: MAKE ME OVERLOAD DADDY
+    addPhysics(mesh: Object3D, isStatic?: boolean | number): void {
+        console.warn('Object added')
+        console.warn(mesh.position)
+        let mass;
+        if (typeof isStatic === 'number') {
+            mass = isStatic;
+        } else {
+            mass = isStatic ? 0 : 1;
+        }
+        //TODO: FIX ME
+        //@ts-ignore
+        const result = threeToCannon(mesh, { type: ShapeType.MESH });
+        console.log(result);
+        const { shape } = result;
+        const { x, y, z } = mesh.position;
+        console.log(mass);
+        const body = new Body({
+            mass,
+            shape,
+            position: new Vec3(x, y, z),
+        })
+        body.linearDamping = 0;
+        this._physicsWorld.addBody(body)
+        if (mass !== 0) {
+            body.collisionResponse = true;
+            this._bodies.push([body, mesh]);
+        }
     }
 
-    update(time: number) {
-        const timeStep = 1 / 60;
-        this.physicsWorld.step(timeStep, time)
+    private remove(index: number, [body, mesh]: [Body, Object3D]) {
+        console.warn('Object removed')
+        console.warn(mesh.position)
+        this._bodies.splice(index, 1);
+        this._physicsWorld.removeBody(body);
+        window.game.scene.remove(mesh);
+    }
 
+    update(dt: number, elapsedTime: number) {
+        const step = 1 / 60;
+        this._physicsWorld.step(step, elapsedTime);
+
+        for (let i = 0; i < this._bodies.length; i++) {
+            const [body, mesh] = this._bodies[i];
+            if (body.position.y < this._maxNegativeHeight) {
+                this.remove(i, [body, mesh]);
+                i--;
+            } else {
+                mesh.quaternion.copy(<unknown>body.quaternion as Quaternion)
+                mesh.position.copy(<unknown>body.position as Vector3)
+            }
+        }
     }
 }

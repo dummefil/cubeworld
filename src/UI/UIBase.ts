@@ -5,7 +5,7 @@ export type UIStyles = {
     [key: string]: UIStyles | string | number
 }
 
-export class UIBase {
+export abstract class UIBase {
     public element: HTMLElement
     constructor(body: string, styles?: UIStyles) {
         this.element = createHTMLElementFromString(body);
@@ -13,6 +13,8 @@ export class UIBase {
             this.handleStyles(this.element, styles);
         }
     }
+    abstract handleEvents(): void;
+
     handleStyles(element: HTMLElement, styles: UIStyles) {
         for (const key in styles) {
             const value = styles[key];

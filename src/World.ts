@@ -348,9 +348,7 @@ export default class World {
             mesh.position.set(cellX * cellSize, cellY * cellSize, cellZ * cellSize);
         }
 
-        // const wireframe = new WireframeGeometry(geometry);
-        // const line = new LineSegments(wireframe);
-        // this.scene.add(line);
+        window.game.physics.addPhysics(mesh, true)
         this.scene.add(new BoxHelper(mesh));
     }
 

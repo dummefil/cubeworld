@@ -5,9 +5,9 @@ import { worldOptions } from './World';
 import World from './World';
 import AudioSystem from './system/AudioSystem';
 import KeyboardSystem from './system/KeyboardSystem';
-import "./debug/IgorDebugger";
-// import Physics from './Physics';
+import Physics from './Physics';
 import { renderWorld } from './render/RenderWorld';
+import "./debug/IgorDebugger";
 
 const canvas = <HTMLCanvasElement>document.getElementById("webgl-canvas");
 const renderer = new WebGLRenderer({
@@ -37,6 +37,7 @@ const audio = new AudioSystem();
 const keyboard = new KeyboardSystem();
 
 const world = new World(worldOptions, scene);
+const physics = new Physics();
 const player = new Player(scene, renderer.domElement);
 
 const gameInstance = {
@@ -48,20 +49,23 @@ const gameInstance = {
     audio,
     keyboard,
     renderer,
-    timer
+    timer,
+    physics
 }
 
 window.game = gameInstance;
 
 renderWorld(worldOptions);
 
-function render(time: number) {
+function render() {
     const deltaTime = timer.getDelta();
     player.update(deltaTime);
+    physics.update(deltaTime, timer.elapsedTime);
+
     renderer.render(scene, player.camera);
     requestAnimationFrame(render);
 }
-render(0);
+render();
 
 function resizeWindow() {
     const { innerHeight, innerWidth } = window

@@ -1,6 +1,6 @@
-import { UIBase, UIStyles } from "./UIBase";
+import { UIBase } from "./UIBase";
 
-const UIPauseMenuStyles: UIStyles = {
+const UIPauseMenuStyles = {
     'display': 'none',
     'justifyContent': 'center',
     'alignItems': 'center',

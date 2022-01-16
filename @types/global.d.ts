@@ -1,3 +1,4 @@
+import Physics from "src/Physics"
 import AudioSystem from "src/system/AudioSystem"
 import KeyboardSystem from "src/system/KeyboardSystem"
 import World from "src/World"
@@ -10,6 +11,7 @@ type Game = {
     audio: AudioSystem,
     keyboard: KeyboardSystem,
     renderer: Renderer,
+    physics: Physics,
 }
 
 declare global {

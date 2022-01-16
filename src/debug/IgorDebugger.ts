@@ -1,6 +1,6 @@
 import { stringifyObject } from "./DebugHelpers";
 import * as config from '../../config.json';
-import { UIBase, UIStyles } from "src/UI/UIBase";
+import { UIBase } from "src/UI/UIBase";
 
 const UIIgorDebuggerBody = `
 	<div class="Igor-container">
@@ -14,7 +14,7 @@ const UIIgorDebuggerBody = `
 	</div>
 `
 
-const UIIgorDebuggerStyles: UIStyles = {
+const UIIgorDebuggerStyles = {
     'position': 'absolute',
     'top': '0',
     'right': '0',
@@ -54,6 +54,8 @@ class UIIgorDebugger extends UIBase {
         if (config.env !== 'development') {
             return;
         }
+        console.warn('Igor Debugger is disabled rn as it\'s not fully working. Like everything in this project :)');
+        return
         this.messageElement = this.element.querySelector('.Igor-messages')
         this.handleEvents();
         this.bindConsole();

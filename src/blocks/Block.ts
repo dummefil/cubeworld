@@ -27,18 +27,8 @@ export class Block implements BlockData {
 		this.mesh.name = 'Block';
 		this.mesh.position.set(x, y, z);
 		this.position = this.mesh.position;
-		const itemSize = 0.1;
+		const itemSize = 1;
 		this.mesh.scale.set(itemSize, itemSize, itemSize);
-		let lastCallTime: number;
-		const animate = () => {
-			requestAnimationFrame(animate)
-			const time = performance.now() / 1000 // seconds
-			const dt = time - lastCallTime
-
-			lastCallTime = time;
-			this.mesh.rotation.y += 0.01;
-		}
-		animate()
 	}
 
 	getItem() {

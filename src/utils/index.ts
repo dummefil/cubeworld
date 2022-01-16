@@ -8,7 +8,7 @@ export function mod(n: number, m: number): number {
     return (n % m + m) % m;
 }
 
-export function isObject(object: any) {
+export function isObject<T>(object: T) {
     return typeof object === 'object' &&
         !Array.isArray(object) &&
         object !== null
