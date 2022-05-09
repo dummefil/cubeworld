@@ -14,7 +14,7 @@
     "url": "git+https://github.com/dummefil/cubeworld.git"
   },
   "dependencies": {
-    "three": "^0.134.0",
+    "three": "0.140.1",
     "webpack": "4.46.0"
   },
   "devDependencies": {
