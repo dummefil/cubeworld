@@ -41,8 +41,15 @@
   },
   "main": "electron/index.js",
   "build": {
-    "appId": "com.yourname.cubeworld",
+    "appId": "com.dummefil.cubeworld",
     "productName": "CubeWorld",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "dummefil",
+        "repo": "cubeworld"
+      }
+    ],
     "files": [
       "dist/**/*",
       "electron/**/*",
