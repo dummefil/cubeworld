@@ -3,6 +3,7 @@ import AudioSystem from "src/system/AudioSystem"
 import KeyboardSystem from "src/system/KeyboardSystem"
 import World from "src/World"
 import { Renderer, Scene } from "three"
+import Player from "src/player/Player";
 
 type Game = {
     world: World,
@@ -12,6 +13,7 @@ type Game = {
     keyboard: KeyboardSystem,
     renderer: Renderer,
     physics: Physics,
+    player: Player
 }
 
 declare global {

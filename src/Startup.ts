@@ -1,4 +1,4 @@
-import { Clock, CubeTextureLoader, ImageLoader, Scene, WebGLRenderer } from "three";
+import {Clock, CubeTextureLoader, ImageLoader, Mesh, Scene, WebGLRenderer} from "three";
 import Player from './player/Player';
 import Light from "./Light";
 import { worldOptions } from './World';
@@ -39,13 +39,13 @@ const keyboard = new KeyboardSystem();
 const world = new World(worldOptions, scene);
 const physics = new Physics();
 const player = new Player(scene, renderer.domElement);
-
+scene.add(player.camera);
 const gameInstance = {
     scene,
     scenes: [scene],
     world,
     player,
-    light, //TODO: do we need it here?
+    light,
     audio,
     keyboard,
     renderer,
@@ -72,6 +72,8 @@ function resizeWindow() {
     renderer.setSize(innerWidth, innerHeight);
     player.camera.aspect = innerWidth / innerHeight;
     player.camera.updateProjectionMatrix();
+
+    console.log('camera.layers', player.camera.layers.mask);
 }
 
 resizeWindow();

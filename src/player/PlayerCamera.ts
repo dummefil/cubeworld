@@ -81,6 +81,7 @@ export default class PlayerCamera extends PerspectiveCamera {
 
     addEvents() {
         const onMouseClick = (event: MouseEvent) => {
+            if (!window.userStateFocused) return;
             const { world, scene } = window.game;
             const { which } = event;
             if (which === ClickType.LeftClick) {

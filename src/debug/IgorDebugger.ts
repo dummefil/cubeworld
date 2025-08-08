@@ -38,54 +38,49 @@ const UIIgorDebuggerStyles = {
     }
 }
 
-enum CONSOLE_STATUS {
-    INFO = "info",
-    WARN = "warn",
-    ERROR = "error",
-    DEBUG = "debug",
-}
-
 class UIIgorDebugger extends UIBase {
-    // private element: HTMLElement;
     private messageElement: HTMLElement;
 
     constructor() {
         super(UIIgorDebuggerBody, UIIgorDebuggerStyles);
-        if (config.env !== 'development') {
+        if (config.env !== 'development' || !config.igor) {
             return;
         }
-        console.warn('Igor Debugger is disabled rn as it\'s not fully working. Like everything in this project :)');
-        return
         this.messageElement = this.element.querySelector('.Igor-messages')
+        if (!this.messageElement) {
+            throw new Error("Igor debugger: .Igor-messages element not found!");
+        }
         this.handleEvents();
         this.bindConsole();
         this.show()
     }
 
     private bindConsole() {
-        const originals = {}
-        Object.keys(CONSOLE_STATUS).forEach((status) => {
-            const _status = status.toLowerCase();
-            const original = console[_status];
-            console.log(_status);
-            originals[_status] = original;
-            const handler = (object: string | Error | Object) => {
-                if (typeof original !== 'function') {
-                    original.call(original, object);
-                    if (object instanceof Object) {
-                        this.printMessage(`[${status}] ${stringifyObject(object, 0, 1)}`,);
-                    } else {
-                        this.printMessage(`[${status}] ${object.toString()}`,);
-                    }
-                }
-            }
-            if (_status === CONSOLE_STATUS.INFO) {
-                originals['log'] = console.log;
-                console.log = handler;
-            }
+        const methods: (keyof Console)[] = ['log', 'info', 'warn', 'error', 'debug'];
 
-            console[_status] = handler;
-        })
+        methods.forEach(method => {
+            const original = console[method];
+
+            (console as any)[method] = (...args: any[]) => {
+                const stack = new Error().stack
+                    ?.split('\n')
+                    .slice(3)
+                    .join('\n') || '';
+
+                const text = args.map(arg => {
+                    if (arg instanceof Error) return arg.stack || arg.message;
+                    if (typeof arg === 'object') return stringifyObject(arg, 0, 1);
+                    return String(arg);
+                }).join(' ');
+
+                const label = `[${method.toUpperCase()}]`;
+                const combined = `${label} ${text}\n${stack}`;
+
+                this.printMessage(combined);
+
+                original.apply(console, args);
+            };
+        });
     }
 
     private parse(rawMessage: String) {
@@ -94,6 +89,7 @@ class UIIgorDebugger extends UIBase {
     }
 
     private printMessage(rawMessage: String) {
+        if (!this.messageElement) return;
         const message = this.parse(rawMessage);
         this.messageElement.innerHTML += `${message}<br>`
         this.element.scrollTo({ left: 0, top: this.element.scrollHeight });
