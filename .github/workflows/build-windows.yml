@@ -2,11 +2,13 @@ name: Build Windows Electron App
 
 on:
   push:
-    branches: [main]  # или другая ветка
+    branches: [main]
 
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
     steps:
       - uses: actions/checkout@v3
