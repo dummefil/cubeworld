@@ -22,7 +22,9 @@ jobs:
         run: npm run build
 
       - name: Build Electron app for Windows x64
-        run: npx electron-builder --win --x64
+        run: |
+          echo "GH_TOKEN length: ${#GH_TOKEN}"
+          npx electron-builder --win --x64
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Upload artifact (EXE)
