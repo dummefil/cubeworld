@@ -23,10 +23,11 @@ export abstract class UIBase {
                 const element = this.element.querySelector(key) as HTMLElement;
                 this.handleStyles(element, value as UIStyles);
             } else {
-                element.style[key] = value;
+                (element.style as any)[key] = value;
             }
         }
     }
+
     show() {
         this.element.style.display = 'flex';
         document.body.appendChild(this.element);

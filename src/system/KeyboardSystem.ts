@@ -9,8 +9,6 @@ export default class KeyboardSystem {
         this._doubleKeyPresses = new Set();
         this._keyBinds = new KeyBinds();
 
-
-
         const pressKey = (event: KeyboardEvent) => {
             event.stopPropagation();
             event.preventDefault();

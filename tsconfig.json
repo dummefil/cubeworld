@@ -10,11 +10,7 @@
     "paths": {
       "src/*": ["src/*"]
     },
-    // Gives error if there are implied "<any>" types.
     "noImplicitAny": true,
-
-    // Allows you to access non-constant properties, such as object[keyVar]
-    "suppressImplicitAnyIndexErrors": true
   },
   "exclude": ["node_modules"],
   "stats": {

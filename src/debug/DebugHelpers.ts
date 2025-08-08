@@ -13,11 +13,11 @@ export function deleteOnTimer({ x, y, z }: Vector3, scene: Scene, timeInSec: num
     }, timeInSec * 1000)
 }
 
-export function stringifyObject(object: Object, depth = 0, maxDepth = 2) {
+export function stringifyObject(object: { [key: string]: any }, depth = 0, maxDepth = 2) {
     // change max_depth to see more levels, for a touch event, 2 is good
     if (depth > maxDepth)
         return 'Object';
-    const obj = {};
+    const obj: { [key: string]: any }= {};
     for (let key in object) {
         let value = object[key];
         if (value instanceof HTMLElement)

@@ -1,0 +1,32 @@
+name: Build Windows Electron App
+
+on:
+  push:
+    branches: [main]  # или другая ветка
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Build Electron app for Windows x64
+        run: npx electron-builder --win --x64
+
+      - name: Upload artifact (EXE)
+        uses: actions/upload-artifact@v3
+        with:
+          name: electron-win-x64
+          path: dist/*.exe

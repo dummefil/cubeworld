@@ -40,8 +40,8 @@ export default class World {
     tileTextureHeight: number
     cellSliceSize: number
     scene: Scene
-    chunks = {}
-    cellIdToMesh = {}
+    chunks: { [key: string]: any } = {}
+    cellIdToMesh: { [key: string]: any } = {}
 
     constructor(options: WorldOptions, scene: Scene) {
         this.cellSize = options.cellSize;

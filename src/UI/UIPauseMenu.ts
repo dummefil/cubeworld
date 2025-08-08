@@ -18,9 +18,9 @@ const UIPauseMenuStyles = {
 
 const UIPauseMenuBody = `
     <div class="pause-menu">
-        <button class="button">Продолжить</button>
-        <button class="button">Настройки</button>
-        <button class="button">Выйти из этого</button>
+        <button class="continue button">Продолжить</button>
+        <button class="settings button">Настройки</button>
+        <button class="exit button">Выйти из этого</button>
     </div>
 `
 
@@ -31,17 +31,20 @@ class UIPauseMenu extends UIBase {
     }
 
     handleEvents() {
-        const elements: NodeListOf<HTMLElement> = this.element.querySelectorAll('.button');
-        elements.forEach((element) => {
-            element.addEventListener('click', (event) => {
-                const target = event.target as HTMLElement;
-                if (target.textContent.toLowerCase() === 'продолжить') {
-                    this.hide();
-                } else {
-                    event.stopPropagation();
-                }
-            })
+        const continueButton = this.element.querySelector('.continue.button');
+        continueButton.addEventListener('click', (event) => {
+            const target = event.target as HTMLElement;
+            if (target.textContent.toLowerCase() === 'продолжить') {
+                this.hide();
+            } else {
+                event.stopPropagation();
+            }
         })
+
+        const exitButton = this.element.querySelector('.exit.button');
+        exitButton.addEventListener('click', () => {
+            window?.electronAPI.quitApp();
+        });
     }
 }
 
