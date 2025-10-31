@@ -346,9 +346,13 @@ export default class World {
             this.cellIdToMesh[cellId] = mesh;
             this.scene.add(mesh);
             mesh.position.set(cellX * cellSize, cellY * cellSize, cellZ * cellSize);
+
+            window.game.physics.addPhysics(mesh, true);
+        } else {
+            window.game.physics.refreshTrimesh?.(mesh);
         }
 
-        window.game.physics.addPhysics(mesh, true)
+        // window.game.physics.addPhysics(mesh, true)
         this.scene.add(new BoxHelper(mesh));
     }
 

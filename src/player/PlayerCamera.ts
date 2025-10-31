@@ -94,7 +94,24 @@ export default class PlayerCamera extends PerspectiveCamera {
                 // // deleteOnTimer(to, this.scene, 10)
                 const { mesh } = new Block(new Vector3(20, 20, 20))
                 scene.add(mesh);
-                window.game.physics.addPhysics(mesh, false);
+
+                scene.add(mesh);
+
+// сделать динамическим (масса 2)
+                window.game.physics.addPhysics(mesh, 2);
+
+// немного демпфирования, чтобы вращение не бесконечное
+                window.game.physics.setAngularDamping(mesh, 0.2);
+
+// способ №1: сразу задать угловую скорость (крутится постоянно)
+                window.game.physics.setAngularVelocity(mesh, new Vector3(0, 4, 0));
+
+// способ №2: пнуть торком (разовое «раскручивание»)
+                window.game.physics.applyTorque(mesh, new Vector3(0, 8, 0));
+
+// при желании — дать линейный импульс:
+                window.game.physics.applyImpulse(mesh, new Vector3(0, 0, 0)); // не обязателен
+                // window.game.physics.addPhysics(mesh, false);
                 // if (intersect) {
                 //     Events.BlockBreak(world, scene, intersect);
                 // }

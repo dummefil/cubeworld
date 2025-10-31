@@ -1,27 +1,36 @@
-import Physics from "src/Physics"
 import AudioSystem from "src/system/AudioSystem"
 import KeyboardSystem from "src/system/KeyboardSystem"
 import World from "src/World"
-import { Renderer, Scene } from "three"
+import {
+    Light,
+    DirectionalLight,
+    PointLight,
+    AmbientLight,
+    Renderer,
+    Scene, Clock,
+} from 'three';
+
+
 import Player from "src/player/Player";
-
-
+import {PhysicsController} from "./physics";
 
 type Game = {
-    world: World,
-    scene: Scene,
-    scenes: Scene[],
-    audio: AudioSystem,
-    keyboard: KeyboardSystem,
-    renderer: Renderer,
-    physics: Physics,
-    player: Player
-}
+    world: World;
+    scene: Scene;
+    scenes: Scene[];
+    audio: AudioSystem;
+    keyboard: KeyboardSystem;
+    renderer: Renderer;
+    light: Light | DirectionalLight | PointLight | AmbientLight;
+    player: Player;
+    timer: Clock
+    physics: PhysicsController
+};
 
 declare global {
     interface Window {
         userStateFocused: boolean,
-        game: Game
+        game: Game & { physics: PhysicsController } & Record<string, any>;
         electronAPI: {
             quitApp: () => {}
         }

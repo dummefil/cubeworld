@@ -1,9 +1,24 @@
-import { Scene, HemisphereLight, HemisphereLightHelper } from "three";
+import { HemisphereLight, HemisphereLightHelper, Scene, ColorRepresentation } from 'three';
 
-export default class Light {
-    constructor(scene: Scene) {
-        const hemiLight = new HemisphereLight('white', 'white', 1);
-        scene.add(new HemisphereLightHelper(hemiLight, 15));
-        scene.add(hemiLight);
+export class GameLight extends HemisphereLight {
+    helper: HemisphereLightHelper;
+
+    constructor(
+        skyColor: ColorRepresentation = 'white',
+        groundColor: ColorRepresentation = 'white',
+        intensity = 1,
+        helperSize = 15
+    ) {
+        super(skyColor, groundColor, intensity);
+        this.helper = new HemisphereLightHelper(this, helperSize);
+    }
+
+    addTo(scene: Scene) {
+        scene.add(this);
+        scene.add(this.helper);
+    }
+
+    dispose() {
+        this.helper.dispose();
     }
 }
